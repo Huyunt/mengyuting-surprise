@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff7fa5" />
+  <title>给孟雨婷的一封小情书</title>
+  <style>
+    :root{
+      --pink:#ff6f9f;
+      --deep:#eb4f84;
+      --light:#fff2f7;
+      --card:#ffffffd9;
+      --text:#6b4050;
+      --muted:#9a6b7b;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,255,255,.88), transparent 25%),
+        radial-gradient(circle at 82% 8%, rgba(255,220,232,.95), transparent 28%),
+        linear-gradient(160deg,#fff5f9 0%, #ffdbe7 45%, #ffc6d8 100%);
+      color:var(--text);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.65;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,.55) 1px, transparent 1px);
+      background-size:34px 34px, 52px 52px;
+      background-position:0 0, 14px 18px;
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle{
+      from{opacity:.35}
+      to{opacity:.8}
+    }
+
+    .floating{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .app{
+      position:relative;
+      width:100%;
+      height:100%;
+      z-index:2;
+    }
+
+    .intro{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      background:radial-gradient(circle at center, rgba(255,255,255,.5), rgba(255,214,228,.95));
+      z-index:20;
+      transition:opacity .7s ease, transform .7s ease;
+    }
+
+    .intro.hide{
+      opacity:0;
+      transform:scale(1.05);
+      pointer-events:none;
+    }
+
+    .gift-wrap{
+      text-align:center;
+      cursor:pointer;
+      user-select:none;
+      animation: float 2.2s ease-in-out infinite;
+      padding:16px;
+    }
+
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .gift{
+      position:relative;
+      width:150px;
+      height:120px;
+      margin:0 auto 28px;
+      border-radius:16px;
+      background:linear-gradient(145deg,#ff7aa7,#f44e86);
+      box-shadow:0 18px 42px rgba(221, 74, 126, .28);
+    }
+
+    .gift::before{
+      content:"";
+      position:absolute;
+      left:60px;
+      top:0;
+      width:30px;
+      height:100%;
+      background:rgba(255,239,182,.95);
+    }
+
+    .gift-lid{
+      position:absolute;
+      left:-8px;
+      top:-18px;
+      width:166px;
+      height:34px;
+      border-radius:10px;
+      background:linear-gradient(145deg,#ff8ab2,#f65c91);
+      box-shadow:0 8px 14px rgba(207,48,105,.18);
+    }
+
+    .gift-lid::before{
+      content:"";
+      position:absolute;
+      left:67px;
+      top:0;
+      width:30px;
+      height:100%;
+      background:rgba(255,239,182,.95);
+    }
+
+    .bow{
+      position:absolute;
+      top:-52px;
+      left:50%;
+      transform:translateX(-50%);
+      width:80px;
+      height:45px;
+    }
+
+    .bow::before,.bow::after{
+      content:"";
+      position:absolute;
+      width:45px;
+      height:34px;
+      border:10px solid #ffeaa5;
+      border-radius:50% 50% 45% 55%;
+      top:7px;
+    }
+    .bow::before{right:36px;transform:rotate(22deg);}
+    .bow::after{left:36px;transform:rotate(-22deg);}
+
+    .tap-text{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:1px;
+      color:#d84274;
+      text-shadow:0 2px 8px rgba(255,255,255,.7);
+    }
+    .tap-sub{
+      margin-top:8px;
+      font-size:14px;
+      color:#a86a7d;
+    }
+
+    .music-btn{
+      position:fixed;
+      top:max(14px, env(safe-area-inset-top));
+      right:14px;
+      z-index:30;
+      border:0;
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.78);
+      color:#d84c7d;
+      font-size:14px;
+      font-weight:700;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow:0 8px 24px rgba(216,76,125,.12);
+      cursor:pointer;
+    }
+
+    .book{
+      position:absolute;
+      inset:0;
+      display:none;
+    }
+    .book.show{display:block;}
+
+    .scene{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:
+        max(70px, calc(env(safe-area-inset-top) + 56px))
+        18px
+        max(90px, calc(env(safe-area-inset-bottom) + 72px));
+      opacity:0;
+      transform:translateX(18px) scale(.98);
+      pointer-events:none;
+      transition:opacity .55s ease, transform .55s ease;
+    }
+
+    .scene.active{
+      opacity:1;
+      transform:translateX(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .card{
+      width:min(94vw, 430px);
+      min-height:min(70vh, 620px);
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      border-radius:30px;
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.86);
+      box-shadow:
+        0 24px 60px rgba(219,82,130,.18),
+        inset 0 1px 0 rgba(255,255,255,.95);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      padding:26px 22px 22px;
+    }
+
+    .page-tag{
+      align-self:flex-start;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,111,159,.12);
+      color:#d84b7c;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.5px;
+      margin-bottom:14px;
+    }
+
+    .title{
+      font-size:clamp(24px, 7vw, 34px);
+      line-height:1.28;
+      color:#d63e73;
+      margin:0 0 12px;
+      font-weight:800;
+    }
+
+    .subtitle{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:18px;
+      line-height:1.7;
+    }
+
+    .content{
+      flex:1;
+      border-radius:22px;
+      background:linear-gradient(145deg, rgba(255,247,250,.96), rgba(255,235,242,.88));
+      padding:20px 18px;
+      font-size:16px;
+      line-height:1.95;
+      color:var(--text);
+      white-space:pre-wrap;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.86);
+      min-height:250px;
+      overflow:hidden;
+    }
+
+    .cursor{
+      display:inline-block;
+      width:2px;
+      height:1.05em;
+      margin-left:2px;
+      vertical-align:-2px;
+      background:#df4d7f;
+      animation: blink .8s steps(1) infinite;
+    }
+
+    @keyframes blink{
+      50%{opacity:0;}
+    }
+
+    .bottom{
+      margin-top:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      min-height:28px;
+    }
+
+    .tip{
+      font-size:12px;
+      color:#b1798a;
+    }
+
+    .next-btn, .restart-btn{
+      border:0;
+      border-radius:999px;
+      padding:12px 18px;
+      background:linear-gradient(90deg,#ff72a1,#ef477a);
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+      box-shadow:0 12px 24px rgba(221,67,120,.22);
+      cursor:pointer;
+    }
+
+    .progress{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:max(20px, calc(env(safe-area-inset-bottom) + 10px));
+      z-index:12;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.7);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 8px 24px rgba(216,76,125,.1);
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#f1b5c8;
+      transition:all .3s ease;
+    }
+
+    .dot.active{
+      width:22px;
+      border-radius:999px;
+      background:#ed4c81;
+    }
+
+    .heart{
+      position:fixed;
+      z-index:11;
+      pointer-events:none;
+      user-select:none;
+      will-change:transform, opacity;
+      animation: rise var(--dur) ease-out forwards;
+      filter:drop-shadow(0 4px 6px rgba(218,62,116,.18));
+    }
+
+    @keyframes rise{
+      0%{
+        opacity:0;
+        transform:translate3d(0,12px,0) scale(.5) rotate(0deg);
+      }
+      15%{opacity:1;}
+      100%{
+        opacity:0;
+        transform:translate3d(var(--x), -110vh, 0) scale(1.35) rotate(var(--r));
+      }
+    }
+
+    .spark{
+      position:fixed;
+      z-index:25;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      pointer-events:none;
+      background:var(--c);
+      box-shadow:0 0 12px var(--c);
+      animation: burst .85s ease-out forwards;
+    }
+
+    @keyframes burst{
+      from{opacity:1;transform:translate(0,0) scale(1);}
+      to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.1);}
+    }
+
+    .love-sign{
+      margin-top:14px;
+      font-size:14px;
+      color:#c7597e;
+      text-align:center;
+    }
+
+    @media (max-height: 690px){
+      .card{min-height:min(72vh, 560px);padding:22px 18px 18px;}
+      .content{font-size:15px;line-height:1.85;min-height:220px;}
+      .subtitle{margin-bottom:14px;}
+      .title{font-size:28px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="floating" id="floating"></div>
+
+  <button class="music-btn" id="musicBtn">🎵 音乐开</button>
+  <audio id="bgm" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <main class="app">
+    <section class="intro" id="intro">
+      <div class="gift-wrap" id="openGift">
+        <div class="gift">
+          <div class="gift-lid"></div>
+          <div class="bow"></div>
+        </div>
+        <div class="tap-text">孟雨婷，点开有惊喜 ♡</div>
+        <div class="tap-sub">点一下礼物，开始看这封小情书</div>
+      </div>
+    </section>
+
+    <section class="book" id="book">
+      <section class="scene" data-index="0">
+        <div class="card">
+          <div class="page-tag">第 1 页 / 道歉</div>
+          <h1 class="title">对不起呀，小婷蛋蛋</h1>
+          <div class="subtitle">先让我认真跟你说一声对不起。</div>
+          <div class="content"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="bottom">
+            <div class="tip">这一页写完，会自动进入下一页</div>
+            <button class="next-btn">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene" data-index="1">
+        <div class="card">
+          <div class="page-tag">第 2 页 / 心里话</div>
+          <h1 class="title">你一直都很重要</h1>
+          <div class="subtitle">有些话，我其实一直都放在心里。</div>
+          <div class="content"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="bottom">
+            <div class="tip">慢慢看，不着急。</div>
+            <button class="next-btn">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene" data-index="2">
+        <div class="card">
+          <div class="page-tag">第 3 页 / 承诺</div>
+          <h1 class="title">我会慢慢改，认真爱</h1>
+          <div class="subtitle">不是嘴上说说，是想真的做到。</div>
+          <div class="content"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="bottom">
+            <div class="tip">爱不是一时，是一次次选择。</div>
+            <button class="next-btn">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene" data-index="3">
+        <div class="card">
+          <div class="page-tag">第 4 页 / 结尾</div>
+          <h1 class="title">我想认真爱你很久很久</h1>
+          <div class="subtitle">最后这一页，只留给你。</div>
+          <div class="content"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="bottom">
+            <div class="tip">小胡蛋蛋写给孟雨婷</div>
+            <button class="restart-btn" id="restartBtn">再看一遍</button>
+          </div>
+          <div class="love-sign">原谅这个有点笨、但真的很爱你的人，好不好？💗</div>
+        </div>
+      </section>
+    </section>
+
+    <div class="progress" id="progress">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </main>
+
+  <script>
+    const pages = [
+`孟雨婷：
+
+对不起呀，小婷蛋蛋。
+
+这几天让你受委屈了。
+你不开心的时候，
+我还总是跟你顶嘴，
+没有先照顾好你的情绪，
+是小胡蛋蛋不好。
+
+我知道你受的委屈，
+不是一句对不起就能马上抹掉的，
+但这句对不起，
+我还是想认认真真地告诉你。`,
+
+`其实和你在一起的日子虽然不算很长，
+可你已经变成了我心里
+很重要很重要的人。
+
+你是一个很好很好的人，
+心思细腻，也很在意身边人的感受。
+很多别人容易忽略的小事，
+你都会认真地放在心上。
+
+和你在一起以后，
+我感受到了一种很踏实的幸福。
+那种被你认真对待、被你放在心上的感觉，
+真的让我特别珍惜。`,
+
+`我会认真改自己不好的地方，
+以后少一点争辩，
+多一点理解；
+少一点让你难过，
+多一点把你放在心尖上。
+
+我不只想在你开心的时候陪着你，
+也想在你委屈、难过、闹情绪的时候，
+依然坚定地站在你身边。
+
+我想给你的，
+不是嘴上好听的话，
+而是慢慢变好的行动。`,
+
+`我真的很爱你，
+不是一时兴起，
+也不是随口说说。
+
+我想认真爱你很久很久，
+把以后的每一天都认真对待，
+把每一次小矛盾，
+都变成更懂你的机会。
+
+所以，小婷蛋蛋，
+原谅这个有点笨、
+但真的很爱你的小胡蛋蛋，
+好不好？`
+    ];
+
+    const intro = document.getElementById('intro');
+    const book = document.getElementById('book');
+    const openGift = document.getElementById('openGift');
+    const scenes = [...document.querySelectorAll('.scene')];
+    const dots = [...document.querySelectorAll('.dot')];
+    const progress = document.getElementById('progress');
+    const musicBtn = document.getElementById('musicBtn');
+    const bgm = document.getElementById('bgm');
+    const restartBtn = document.getElementById('restartBtn');
+
+    let currentPage = 0;
+    let started = false;
+    let timers = [];
+    let typingTimer = null;
+    let musicOn = true;
+
+    function clearAllTimers(){
+      timers.forEach(t => clearTimeout(t));
+      timers = [];
+      if(typingTimer) clearInterval(typingTimer);
+      typingTimer = null;
+    }
+
+    function createHeart(x = Math.random() * innerWidth, y = innerHeight + 20, size = 18){
+      const hearts = ['💗','💖','💕','💓','💞','🌸'];
+      const el = document.createElement('div');
+      el.className = 'heart';
+      el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      el.style.fontSize = `${size + Math.random()*18}px`;
+      el.style.setProperty('--x', `${(Math.random()-.5) * 180}px`);
+      el.style.setProperty('--r', `${(Math.random()-.5) * 90}deg`);
+      el.style.setProperty('--dur', `${3.2 + Math.random()*2.6}s`);
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }
+
+    function heartRain(count = 24){
+      for(let i=0;i<count;i++){
+        setTimeout(() => createHeart(Math.random()*innerWidth, innerHeight+20, 14), i*70);
+      }
+    }
+
+    function burst(x, y, count=18){
+      const colors = ['#ff5e93','#ffb4ca','#ffd166','#ffffff','#f48fb1'];
+      for(let i=0;i<count;i++){
+        const p = document.createElement('span');
+        p.className = 'spark';
+        const angle = (Math.PI*2*i)/count + Math.random()*.4;
+        const distance = 45 + Math.random()*90;
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+        p.style.setProperty('--dx', `${Math.cos(angle)*distance}px`);
+        p.style.setProperty('--dy', `${Math.sin(angle)*distance}px`);
+        p.style.setProperty('--c', colors[Math.floor(Math.random()*colors.length)]);
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+      }
+    }
+
+    function tryPlayMusic(){
+      if(!musicOn) return;
+      const p = bgm.play();
+      if(p && typeof p.then === 'function'){
+        p.then(() => {
+          musicBtn.textContent = '🎵 音乐开';
+        }).catch(() => {
+          musicBtn.textContent = '🎵 点我开音乐';
+        });
+      }
+    }
+
+    function toggleMusic(){
+      musicOn = !musicOn;
+      if(musicOn){
+        tryPlayMusic();
+        musicBtn.textContent = '🎵 音乐开';
+      }else{
+        bgm.pause();
+        musicBtn.textContent = '🔇 音乐关';
+      }
+    }
+
+    function updateDots(index){
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    }
+
+    function showScene(index){
+      clearAllTimers();
+      currentPage = index;
+      updateDots(index);
+      scenes.forEach((scene, i) => scene.classList.toggle('active', i === index));
+
+      const scene = scenes[index];
+      const typed = scene.querySelector('.typed');
+      const cursor = scene.querySelector('.cursor');
+      const fullText = pages[index];
+      const nextBtn = scene.querySelector('.next-btn');
+
+      typed.textContent = '';
+      cursor.style.display = 'inline-block';
+      if(nextBtn) nextBtn.style.visibility = 'hidden';
+
+      let i = 0;
+      typingTimer = setInterval(() => {
+        typed.textContent += fullText[i] || '';
+        i++;
+        if(i >= fullText.length){
+          clearInterval(typingTimer);
+          typingTimer = null;
+          cursor.style.display = 'none';
+          if(nextBtn) nextBtn.style.visibility = 'visible';
+          if(index < pages.length - 1){
+            timers.push(setTimeout(() => nextScene(), 3000));
+          }
+        }
+      }, 72);
+
+      heartRain(index === 0 ? 18 : 12);
+    }
+
+    function nextScene(){
+      if(currentPage < scenes.length - 1){
+        showScene(currentPage + 1);
+      }
+    }
+
+    function openSurprise(){
+      if(started) return;
+      started = true;
+      const rect = openGift.getBoundingClientRect();
+      burst(rect.left + rect.width/2, rect.top + rect.height/2, 28);
+
+      intro.classList.add('hide');
+      book.classList.add('show');
+      heartRain(28);
+      tryPlayMusic();
+
+      timers.push(setTimeout(() => {
+        showScene(0);
+      }, 320));
+    }
+
+    openGift.addEventListener('click', openSurprise);
+    openGift.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      openSurprise();
+    }, {passive:false});
+
+    document.querySelectorAll('.next-btn').forEach(btn => {
+      btn.addEventListener('click', nextScene);
+    });
+
+    restartBtn.addEventListener('click', () => {
+      showScene(0);
+    });
+
+    musicBtn.addEventListener('click', toggleMusic);
+
+    document.addEventListener('pointerdown', (e) => {
+      if(!started) return;
+      burst(e.clientX, e.clientY, 10);
+      for(let i=0;i<4;i++){
+        createHeart(e.clientX + (Math.random()-.5)*50, e.clientY + 10, 12);
+      }
+    });
+
+    setInterval(() => {
+      if(started) createHeart();
+    }, 900);
+  </script>
+</body>
+</html>
